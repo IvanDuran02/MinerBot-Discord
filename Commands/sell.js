@@ -19,8 +19,6 @@ function Sell(message) {
         let profileData = yield profileSchema_1.default.findOne({
             userID: message.author.id,
         });
-        if (!profileData)
-            return message.channel.send("!help\nSince you're a new user take a look at these commands first!!");
         let sell = (yield profileData.iron) * 25;
         const response = yield profileSchema_1.default.findOneAndUpdate({ userID: message.author.id }, {
             $inc: {

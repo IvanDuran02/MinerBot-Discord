@@ -14,24 +14,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = require("discord.js");
 const profileSchema_1 = __importDefault(require("../profileSchema"));
-function Mine(message) {
+function Inventory(message) {
     return __awaiter(this, void 0, void 0, function* () {
         let profileData = yield profileSchema_1.default.findOne({
             userID: message.author.id,
         });
-        let number = Math.floor(Math.random() * 9) + 1;
-        const response = yield profileSchema_1.default.findOneAndUpdate({ userID: message.author.id }, {
-            $inc: {
-                iron: number,
-            },
-        });
-        const mine_embed = new discord_js_1.MessageEmbed()
+        const inventory_embed = new discord_js_1.MessageEmbed()
             .setColor("#0099ff")
             .setTitle("Slave Miner")
-            .setDescription(`You have mined ${number} Iron.`);
+            .setDescription(`You have ${profileData.iron} Iron in your inventory.`);
         message.channel.send({
-            embeds: [mine_embed],
+            embeds: [inventory_embed],
         });
     });
 }
-exports.default = Mine;
+exports.default = Inventory;

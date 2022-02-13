@@ -5,8 +5,6 @@ export default async function Sell(message: any) {
   let profileData = await profileModels.findOne({
     userID: message.author.id,
   });
-  if (!profileData) return message.channel.send("!help\nSince you're a new user take a look at these commands first!!");
-
   let sell = (await profileData.iron) * 25;
   const response = await profileModels.findOneAndUpdate(
     { userID: message.author.id },

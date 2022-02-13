@@ -5,7 +5,6 @@ export default async function Mine(message: any) {
   let profileData = await profileModels.findOne({
     userID: message.author.id,
   });
-  if (!profileData) return message.channel.send("!help\nSince you're a new user take a look at these commands first!");
   let number = Math.floor(Math.random() * 9) + 1;
   const response = await profileModels.findOneAndUpdate(
     { userID: message.author.id },

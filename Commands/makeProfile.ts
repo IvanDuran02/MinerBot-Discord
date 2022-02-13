@@ -3,7 +3,6 @@ import profileSchema from "../profileSchema";
 
 export async function makeProfile(message: any) {
   try {
-    console.log("checking for profile");
     let profileData = await profileModels.findOne({
       userID: message.author.id,
     });

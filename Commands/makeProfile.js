@@ -19,7 +19,6 @@ function makeProfile(message) {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            console.log("checking for profile");
             let profileData = yield profileSchema_1.default.findOne({
                 userID: message.author.id,
             });

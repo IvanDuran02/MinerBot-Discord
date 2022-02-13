@@ -6,6 +6,7 @@ import { makeProfile } from "./Commands/makeProfile";
 import Mine from "./Commands/mine";
 import Bal from "./Commands/bal";
 import Sell from "./Commands/sell";
+import Inventory from "./Commands/inventory";
 
 dotenv.config();
 
@@ -38,6 +39,7 @@ const help_embed = new MessageEmbed()
     { name: "!mine", value: "Use this command to start mining!" },
     { name: "!sell", value: "Use this command to sell all your ore!" },
     { name: "!bal", value: "Use this command to check your balance!" },
+    { name: "!inv", value: "Use this command to check your inventory" },
     { name: "!pay", value: "Use this command to send someone money!" }
   );
 
@@ -45,7 +47,7 @@ const help_embed = new MessageEmbed()
 
 client.on("messageCreate", async (message) => {
   if (message.content.startsWith(prefix)) {
-    makeProfile(message);
+    await makeProfile(message);
 
     // async function checks for user in database if none creates one
     if (message.content.startsWith(prefix + "help")) {
@@ -67,12 +69,8 @@ client.on("messageCreate", async (message) => {
       Bal(message);
     }
   }
-  if (message.content.startsWith(prefix + "inventory")) {
-    // !help commands shows you all commands you can use
-    message.channel.send({
-      embeds: [help_embed],
-    });
-    console.log(message.author.id);
+  if (message.content.startsWith(prefix + "inv")) {
+    Inventory(message);
   }
 });
 

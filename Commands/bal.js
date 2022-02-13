@@ -19,8 +19,6 @@ function Bal(message) {
         let profileData = yield profileSchema_1.default.findOne({
             userID: message.author.id,
         });
-        if (!profileData)
-            return message.channel.send("!help\nSince you're a new user take a look at these commands first!");
         const bal_embed = new discord_js_1.MessageEmbed()
             .setColor("#50C878")
             .setTitle("Slave Miner")

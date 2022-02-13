@@ -39,6 +39,7 @@ const makeProfile_1 = require("./Commands/makeProfile");
 const mine_1 = __importDefault(require("./Commands/mine"));
 const bal_1 = __importDefault(require("./Commands/bal"));
 const sell_1 = __importDefault(require("./Commands/sell"));
+const inventory_1 = __importDefault(require("./Commands/inventory"));
 dotenv_1.default.config();
 const client = new discord_js_1.default.Client({
     intents: [discord_js_1.Intents.FLAGS.GUILDS, discord_js_1.Intents.FLAGS.GUILD_MESSAGES],
@@ -61,11 +62,11 @@ const help_embed = new discord_js_2.MessageEmbed()
 })
     //  .setTitle("Slave Miner")
     .setThumbnail("https://cdn.discordapp.com/attachments/263137651199180802/935335655377084416/unknown.png")
-    .addFields({ name: "!mine", value: "Use this command to start mining!" }, { name: "!sell", value: "Use this command to sell all your ore!" }, { name: "!bal", value: "Use this command to check your balance!" }, { name: "!pay", value: "Use this command to send someone money!" });
+    .addFields({ name: "!mine", value: "Use this command to start mining!" }, { name: "!sell", value: "Use this command to sell all your ore!" }, { name: "!bal", value: "Use this command to check your balance!" }, { name: "!inv", value: "Use this command to check your inventory" }, { name: "!pay", value: "Use this command to send someone money!" });
 // Commands
 client.on("messageCreate", (message) => __awaiter(void 0, void 0, void 0, function* () {
     if (message.content.startsWith(prefix)) {
-        (0, makeProfile_1.makeProfile)(message);
+        yield (0, makeProfile_1.makeProfile)(message);
         // async function checks for user in database if none creates one
         if (message.content.startsWith(prefix + "help")) {
             // !help commands shows you all commands you can use
@@ -86,12 +87,8 @@ client.on("messageCreate", (message) => __awaiter(void 0, void 0, void 0, functi
             (0, bal_1.default)(message);
         }
     }
-    if (message.content.startsWith(prefix + "inventory")) {
-        // !help commands shows you all commands you can use
-        message.channel.send({
-            embeds: [help_embed],
-        });
-        console.log(message.author.id);
+    if (message.content.startsWith(prefix + "inv")) {
+        (0, inventory_1.default)(message);
     }
 }));
 client.login(process.env.TOKEN);
