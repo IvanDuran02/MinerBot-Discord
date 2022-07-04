@@ -1,4 +1,4 @@
-# SlaveMiner
+#  MinerBot - Discord
 
 Personal project.
 
