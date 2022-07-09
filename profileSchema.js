@@ -16,18 +16,12 @@ const profileSchema = new mongoose_1.default.Schema({
     },
     balance: {
         type: Number,
-        default: 0,
-        required: true,
-    },
-    inventory: {
-        type: Array,
-        required: true,
-    },
-    bank: {
-        type: Number,
     },
     iron: {
         type: Number,
     },
+    gay: {
+        type: String,
+    },
 });
-exports.default = mongoose_1.default.model("ProfileModels", profileSchema);
+exports.default = mongoose_1.default.model("profileModels", profileSchema);

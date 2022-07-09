@@ -27,10 +27,7 @@ function makeProfile(message) {
                 yield new profileSchema_2.default({
                     userID: message.author.id,
                     serverID: (_a = message.guild) === null || _a === void 0 ? void 0 : _a.id,
-                    balance: 0,
-                    inventory: [],
-                    iron: 0,
-                    bank: 0,
+                    gay: "undefined",
                 }).save();
             }
         }

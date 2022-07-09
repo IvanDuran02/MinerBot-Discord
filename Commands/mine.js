@@ -19,8 +19,12 @@ function Mine(message) {
         let profileData = yield profileSchema_1.default.findOne({
             userID: message.author.id,
         });
+        if (!profileData.iron) {
+            console.log("dont have iron");
+            yield profileData.updateOne({ iron: 0, balance: 0 });
+        }
         let number = Math.floor(Math.random() * 9) + 1;
-        const response = yield profileSchema_1.default.findOneAndUpdate({ userID: message.author.id }, {
+        yield profileSchema_1.default.findOneAndUpdate({ userID: message.author.id }, {
             $inc: {
                 iron: number,
             },
@@ -32,6 +36,7 @@ function Mine(message) {
         message.channel.send({
             embeds: [mine_embed],
         });
+        function Iron() { }
     });
 }
 exports.default = Mine;

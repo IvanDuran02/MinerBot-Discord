@@ -5,8 +5,12 @@ export default async function Mine(message: any) {
   let profileData = await profileModels.findOne({
     userID: message.author.id,
   });
+  if (!profileData.iron) {
+    console.log("dont have iron");
+    await profileData.updateOne({ iron: 0, balance: 0 });
+  }
   let number = Math.floor(Math.random() * 9) + 1;
-  const response = await profileModels.findOneAndUpdate(
+  await profileModels.findOneAndUpdate(
     { userID: message.author.id },
     {
       $inc: {
@@ -23,4 +27,6 @@ export default async function Mine(message: any) {
   message.channel.send({
     embeds: [mine_embed],
   });
+
+  function Iron() {}
 }

@@ -12,19 +12,13 @@ const profileSchema = new mongoose.Schema({
   },
   balance: {
     type: Number,
-    default: 0,
-    required: true,
-  },
-  inventory: {
-    type: Array,
-    required: true,
-  },
-  bank: {
-    type: Number,
   },
   iron: {
     type: Number,
   },
+  gay: {
+    type: String,
+  },
 });
 
-export default mongoose.model("ProfileModels", profileSchema);
+export default mongoose.model("profileModels", profileSchema);

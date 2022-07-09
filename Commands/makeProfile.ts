@@ -11,10 +11,7 @@ export async function makeProfile(message: any) {
       await new profileSchema({
         userID: message.author.id,
         serverID: message.guild?.id,
-        balance: 0,
-        inventory: [],
-        iron: 0,
-        bank: 0,
+        gay: "undefined",
       }).save();
     }
   } catch (error) {
