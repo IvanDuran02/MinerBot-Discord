@@ -7,7 +7,7 @@ import Mine from "./Commands/mine";
 import Bal from "./Commands/bal";
 import Sell from "./Commands/sell";
 import Inventory from "./Commands/inventory";
-
+import Gay from "./Commands/gay";
 import profileModels from "./profileSchema";
 // import { channel } from "diagnostics_channel";
 dotenv.config();
@@ -32,6 +32,7 @@ client.on("ready", async () => {
 });
 
 const prefix = "!";
+let timeLeft = 0;
 
 function shuffle(array: number[]) {
   // shuffle function
@@ -70,7 +71,12 @@ const help_embed = new MessageEmbed()
     { name: "!inv", value: "Use this command to check your inventory" },
     { name: "!pay", value: "Use this command to send someone money!" },
     { name: "!queue", value: "Use this to queue up to play 5v5 customs!" },
-    { name: "!leave queue", value: "Use this to leave the queue for 5v5" }
+    { name: "!leave queue", value: "Use this to leave the queue for 5v5" },
+    {
+      name: "!gay",
+      value:
+        "If you've been wondering if you or someone you know is gay then use to command to find out! It is correct 100% of the time. You can do !gay to check if you are gay or mention someone else to check if they are gay.",
+    }
   );
 
 // Commands
@@ -84,30 +90,58 @@ client.on("messageCreate", async (message) => {
   let profileData = await profileModels.findOne({
     userID: message.author.id,
   });
+  if (profileData.gay === "undefined") {
+    let number = Math.floor(Math.random() * 9);
+    console.log(number);
+    if (number < 3) {
+      await profileModels.findOneAndUpdate(
+        { userID: message.author.id },
+        {
+          gay: "false",
+        }
+      );
+    } else {
+      await profileModels.findOneAndUpdate(
+        { userID: message.author.id },
+        {
+          gay: "true",
+        }
+      );
+    }
+  }
 
   if (message.content.startsWith(prefix + "help")) {
     // !help commands shows you all commands you can use
+
     message.channel.send({
       embeds: [help_embed],
     });
   }
   if (message.content.startsWith(prefix + "mine")) {
     // mines ore in mining game
-    if (talkedRecently.has(message.author.id)) {
-      message.channel.send("Please wait before mining again");
-    } else {
+    if (!talkedRecently.has(message.author.id)) {
+      timeLeft = 5;
       talkedRecently.add(message.author.id);
       if (message.channel.id == "817089412781178902") {
         // changes depending on channel msg is sent
         setTimeout(() => {
           // Removes the user from the set after a minute
           talkedRecently.delete(message.author.id);
-        }, 60000);
-      } else {
-        // Removes the user from the set after a minute
-        talkedRecently.delete(message.author.id);
+          timeLeft = 0;
+        }, 5000);
+
+        const interval = setInterval(() => {
+          timeLeft -= 1;
+          if (timeLeft < 0) {
+            clearInterval(interval);
+          }
+        }, 1000);
       }
       Mine(message);
+    } else {
+      message.channel.send(
+        `Please wait ${timeLeft} seconds before mining again`
+      );
     }
   }
   if (message.content.startsWith(prefix + "sell")) {
@@ -213,11 +247,9 @@ client.on("messageCreate", async (message) => {
       components: [],
     });
   }
-});
 
-client.on("clickButton", async (button) => {
-  if (button.id === "primary") {
-    console.log("clicked");
+  if (message.content.startsWith(prefix + "gay")) {
+    Gay(message);
   }
 });
 

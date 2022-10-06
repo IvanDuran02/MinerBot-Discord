@@ -40,6 +40,7 @@ const mine_1 = __importDefault(require("./Commands/mine"));
 const bal_1 = __importDefault(require("./Commands/bal"));
 const sell_1 = __importDefault(require("./Commands/sell"));
 const inventory_1 = __importDefault(require("./Commands/inventory"));
+const gay_1 = __importDefault(require("./Commands/gay"));
 const profileSchema_1 = __importDefault(require("./profileSchema"));
 // import { channel } from "diagnostics_channel";
 dotenv_1.default.config();
@@ -61,6 +62,7 @@ client.on("ready", () => __awaiter(void 0, void 0, void 0, function* () {
     }
 }));
 const prefix = "!";
+let timeLeft = 0;
 function shuffle(array) {
     // shuffle function
     let currentIndex = array.length, randomIndex;
@@ -84,7 +86,10 @@ const help_embed = new discord_js_2.MessageEmbed()
 })
     //  .setTitle("Slave Miner")
     .setThumbnail("https://cdn.discordapp.com/attachments/263137651199180802/935335655377084416/unknown.png")
-    .addFields({ name: "!mine", value: "Use this command to start mining!" }, { name: "!sell", value: "Use this command to sell all your ore!" }, { name: "!bal", value: "Use this command to check your balance!" }, { name: "!inv", value: "Use this command to check your inventory" }, { name: "!pay", value: "Use this command to send someone money!" }, { name: "!queue", value: "Use this to queue up to play 5v5 customs!" }, { name: "!leave queue", value: "Use this to leave the queue for 5v5" });
+    .addFields({ name: "!mine", value: "Use this command to start mining!" }, { name: "!sell", value: "Use this command to sell all your ore!" }, { name: "!bal", value: "Use this command to check your balance!" }, { name: "!inv", value: "Use this command to check your inventory" }, { name: "!pay", value: "Use this command to send someone money!" }, { name: "!queue", value: "Use this to queue up to play 5v5 customs!" }, { name: "!leave queue", value: "Use this to leave the queue for 5v5" }, {
+    name: "!gay",
+    value: "If you've been wondering if you or someone you know is gay then use to command to find out! It is correct 100% of the time. You can do !gay to check if you are gay or mention someone else to check if they are gay.",
+});
 // Commands
 let team1 = [];
 let team2 = [];
@@ -94,6 +99,20 @@ client.on("messageCreate", (message) => __awaiter(void 0, void 0, void 0, functi
     let profileData = yield profileSchema_1.default.findOne({
         userID: message.author.id,
     });
+    if (profileData.gay === "undefined") {
+        let number = Math.floor(Math.random() * 9);
+        console.log(number);
+        if (number < 3) {
+            yield profileSchema_1.default.findOneAndUpdate({ userID: message.author.id }, {
+                gay: "false",
+            });
+        }
+        else {
+            yield profileSchema_1.default.findOneAndUpdate({ userID: message.author.id }, {
+                gay: "true",
+            });
+        }
+    }
     if (message.content.startsWith(prefix + "help")) {
         // !help commands shows you all commands you can use
         message.channel.send({
@@ -102,23 +121,27 @@ client.on("messageCreate", (message) => __awaiter(void 0, void 0, void 0, functi
     }
     if (message.content.startsWith(prefix + "mine")) {
         // mines ore in mining game
-        if (talkedRecently.has(message.author.id)) {
-            message.channel.send("Please wait before mining again");
-        }
-        else {
+        if (!talkedRecently.has(message.author.id)) {
+            timeLeft = 5;
             talkedRecently.add(message.author.id);
             if (message.channel.id == "817089412781178902") {
                 // changes depending on channel msg is sent
                 setTimeout(() => {
                     // Removes the user from the set after a minute
                     talkedRecently.delete(message.author.id);
-                }, 60000);
-            }
-            else {
-                // Removes the user from the set after a minute
-                talkedRecently.delete(message.author.id);
+                    timeLeft = 0;
+                }, 5000);
+                const interval = setInterval(() => {
+                    timeLeft -= 1;
+                    if (timeLeft < 0) {
+                        clearInterval(interval);
+                    }
+                }, 1000);
             }
             (0, mine_1.default)(message);
+        }
+        else {
+            message.channel.send(`Please wait ${timeLeft} seconds before mining again`);
         }
     }
     if (message.content.startsWith(prefix + "sell")) {
@@ -211,10 +234,8 @@ client.on("messageCreate", (message) => __awaiter(void 0, void 0, void 0, functi
             components: [],
         });
     }
-}));
-client.on("clickButton", (button) => __awaiter(void 0, void 0, void 0, function* () {
-    if (button.id === "primary") {
-        console.log("clicked");
+    if (message.content.startsWith(prefix + "gay")) {
+        (0, gay_1.default)(message);
     }
 }));
 client.login(process.env.TOKEN);
